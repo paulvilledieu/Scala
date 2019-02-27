@@ -1,7 +1,0 @@
-# Intellij
-.idea/
-
-# Sbt
-project/target/
-target/
-
