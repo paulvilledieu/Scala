@@ -1,10 +1,11 @@
 import java.io.File
 
 import scala.io.Source
-import tools.FileParser.getDirFiles
+import FileParser.{getDirFiles, parseFiles}
 
 
 object Main extends App {
+
 
   def readLines(file: File) = {
     if (file.exists && file.canRead) {
@@ -14,8 +15,8 @@ object Main extends App {
     }
   }
 
-  print(getDirFiles("./src/test/resources", List(".csv", ".json")) match {
+  getDirFiles("./src/test/resources", List(".csv", ".json")) match {
     case Left(x) => x
-    case Right(x) => x.map(readLines)
-  })
+    case Right(x) => parseFiles(x)
+  }
 }

@@ -1,11 +1,21 @@
-package tools
-
 import java.io.File
 
+import scala.io.Source
+import Sender.{Message, send_msg}
+
+import scala.concurrent.{ExecutionContext, Future}
+import ExecutionContext.Implicits.global
 
 object FileParser {
 
-  case class Message(m_type: Int, message: String)
+  def csv_parser(str: String): Message  =  {
+    Message(0, "")
+  }
+
+
+  def json_parser(str: String): Message = {
+    Message(0, "")
+  }
 
   def getDirFiles(path: String, extensions: List[String]): Either[String, List[File]] = {
     path match {
@@ -13,6 +23,21 @@ object FileParser {
       case _ => getListOfFiles(new File(path), extensions)
     }
   }
+
+  def parseFiles(files: List[File]): Unit = {
+    files match {
+      case Nil =>
+      case file :: rest => file.getName match {
+          case name if name.endsWith(".csv") =>
+            parseFile(file, csv_parser)
+
+          case name if name.endsWith(".json") =>
+            parseFile(file, json_parser)
+        }
+        parseFiles(rest)
+    }
+  }
+
 
   private[this]
   def getListOfFiles(dir: File, extensions: List[String]): Either[String, List[File]] = {
@@ -29,12 +54,16 @@ object FileParser {
     }
   }
 
-  def parseCSV(file: File)  =  {
-  }
-
-
-  def parseJSON(file: File) = {
-
+  private[this]
+  def parseFile(file: File,
+                f_parser: Function[String, Message]): Unit = {
+    Source.fromFile(file)
+      .getLines
+      .foreach { line =>
+        val future: Future[String] = Future {
+          send_msg(f_parser(line))
+        }
+      }
   }
 
 }
