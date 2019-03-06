@@ -6,7 +6,7 @@ object Sender {
 
   def send_msg(msg: Message): String = {
     //post traitements des différents types de messages
-    println("Sending Message")
+    println("Sending " +  msg)
     sendMessage(msg.message)
     "Good"
   }

@@ -3,6 +3,8 @@ import java.io.File
 import scala.io.Source
 import FileParser.{getDirFiles, parseFiles}
 
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 object Main extends App {
 
@@ -17,6 +19,8 @@ object Main extends App {
 
   getDirFiles("./src/test/resources", List(".csv", ".json")) match {
     case Left(x) => x
-    case Right(x) => parseFiles(x)
+    case Right(x) =>
+      val future = parseFiles(x)
+      Await.result(future, 5.seconds)
   }
 }
