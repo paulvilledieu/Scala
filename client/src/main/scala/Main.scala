@@ -21,6 +21,6 @@ object Main extends App {
     case Left(x) => x
     case Right(x) =>
       val future = parseFiles(x)
-      Await.result(future, 5.seconds)
+      Await.result(future, Duration.Inf)
   }
 }

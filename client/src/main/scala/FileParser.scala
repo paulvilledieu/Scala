@@ -8,7 +8,8 @@ import scala.concurrent.{ExecutionContext, Future}
 object FileParser {
 
   def csv_parser(str: String): Message  =  {
-    Message(0, str)
+    val msg = str.split(',')
+    Message(msg(0).toInt, msg(1))
   }
 
 
@@ -23,7 +24,7 @@ object FileParser {
     }
   }
 
-  def parseFiles(files: List[File]): Future[List[Iterator[String]]] = {
+  def parseFiles(files: List[File]) = {
     val futures = files.map(file => file.getName match {
       case name if name.endsWith(".csv") =>
         parseFile(file, csv_parser)
@@ -33,18 +34,6 @@ object FileParser {
     })
     implicit val context: ExecutionContext = ExecutionContext.Implicits.global
     Future.sequence(futures)
-    /*
-    files match {
-      case Nil =>
-      case file :: rest =>
-        val futures = file.getName match {
-          case name if name.endsWith(".csv") =>
-            parseFile(file, csv_parser)
-
-          case name if name.endsWith(".json") =>
-            parseFile(file, json_parser)
-        }
-        parseFiles(rest)*/
   }
 
 
