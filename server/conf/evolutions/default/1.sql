@@ -1,14 +1,16 @@
--- User schema
+-- Data schema
 
 -- !Ups
 
-create table `user` (
+create table `data` (
   `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `first_name` TEXT NOT NULL,
-  `last_name` TEXT NOT NULL,
-  `mobile` BIGINT NOT NULL,
-  `email` TEXT NOT NULL
+  `objectId` BIGINT NOT NULL,
+  `latitude` TEXT NOT NULL,
+  `longitude` TEXT NOT NULL,
+  `temperature` TEXT NOT NULL,
+  `batteryRemaining` TEXT NOT NULL,
+  `heartRate` TEXT NOT NULL
 )
 
 -- !Downs
-drop table `user`
+drop table `data`
