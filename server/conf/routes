@@ -6,6 +6,7 @@
 # An example controller showing a sample home page
 GET     /                           controllers.ApplicationController.index
 POST    /datas                      controllers.ApplicationController.addData
+POST    /alerts                     controllers.ApplicationController.addAlert
 GET     /datas/delete/:id           controllers.ApplicationController.deleteData(id : Long)
 
 # Map static resources from the /public folder to the /assets URL path
