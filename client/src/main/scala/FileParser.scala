@@ -1,21 +1,11 @@
 import java.io.File
 
 import scala.io.Source
-import Sender.{Message, send_msg}
+import Sender.{Message, send_msg, csv_parser, json_parser}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 object FileParser {
-
-  def csv_parser(str: String): Message  =  {
-    val msg = str.split(',')
-    Message(msg(0).toInt, msg(1))
-  }
-
-
-  def json_parser(str: String): Message = {
-    Message(0, str)
-  }
 
   def getDirFiles(path: String, extensions: List[String]): Either[String, List[File]] = {
     path match {
