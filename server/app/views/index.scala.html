@@ -6,6 +6,7 @@
         <table cellspacing="20">
           <tr>
             <th>Message Id</th>
+            <th>Timestamp</th>
             <th>Object Id</th>
             <th>Latitude</th>
             <th>Longitude</th>
@@ -14,16 +15,55 @@
             <th>Heart Rate</th>
           </tr>
           @for(data <- datas){
-            <tr>
-              <td>@data.id</td>
-              <td>@data.objectId</td>
-              <td>@data.latitude</td>
-              <td>@data.longitude</td>
-              <td>@data.temperature</td>
-              <td>@data.batteryRemaining</td>
-              <td>@data.heartRate</td>
-              <td><a href="@routes.ApplicationController.deleteData(data.id)">delete</a></td>
-            </tr>
+            @if(!data.isAlert){
+              <tr>
+                <td>@data.id</td>
+                <td>@data.timestamp</td>
+                <td>@data.objectId</td>
+                <td>@data.latitude</td>
+                <td>@data.longitude</td>
+                <td>@data.temperature</td>
+                <td>@data.batteryRemaining</td>
+                <td>@data.heartRate</td>
+                <td><a href="@routes.ApplicationController.deleteData(data.id)">delete</a></td>
+              </tr>
+            }
+          }
+        </table>
+      </fieldset>
+    </div>
+    <div class="user-display" >
+      <fieldset>
+        <legend align="center"><h3>Alerts List</h3></legend>
+        <table cellspacing="20">
+          <tr>
+            <th>Message Id</th>
+            <th>Timestamp</th>
+            <th>Object Id</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Temperature</th>
+            <th>Battery Remaining</th>
+            <th>Heart Rate</th>
+            <th>State</th>
+            <th>Message</th>
+          </tr>
+          @for(data <- datas){
+            @if(data.isAlert){
+              <tr>
+                <td>@data.id</td>
+                <td>@data.timestamp</td>
+                <td>@data.objectId</td>
+                <td>@data.latitude</td>
+                <td>@data.longitude</td>
+                <td>@data.temperature</td>
+                <td>@data.batteryRemaining</td>
+                <td>@data.heartRate</td>
+                <td>@data.state</td>
+                <td>@data.message</td>
+                <td><a href="@routes.ApplicationController.deleteData(data.id)">delete</a></td>
+              </tr>
+            }
           }
         </table>
       </fieldset>
