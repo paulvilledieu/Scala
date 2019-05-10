@@ -56,8 +56,8 @@ object Sender {
     val json = Json.toJson(msg)(messageWrites)
     println("Sending " +  json.toString())
     if (msg.msg_type > 0)
-      println(sendAlert(json.toString()).right.toString)
+      println(sendAlert(json.toString()))
     else
-      println(sendMessage(json.toString()).right.toString)
+      println(sendMessage(json.toString()))
   }
 }

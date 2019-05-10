@@ -12,18 +12,18 @@ object Request {
         .header("Content-Type", "application/json")
         .header("Charset", "UTF-8")
         .option(HttpOptions.readTimeout(10000))
-        .asString)
+        .asString.statusLine)
     } catch {
       //case java.net.ConnectException => Left("Connection Exception")
-      case exception: Exception => Left(exception.toString)
+      case exception: Exception => Left(exception.getMessage)
     }
   }
 
-  def sendMessage(body: String): Either[String, HttpResponse[String]] = {
+  def sendMessage(body: String): Either[String, String] = {
     send(uri + "datas", body)
   }
 
-  def sendAlert(body: String): Either[String, HttpResponse[String]] = {
+  def sendAlert(body: String): Either[String, String] = {
     send(uri + "alerts", body)
   }
 
