@@ -3,7 +3,7 @@ import scalaj.http.{Http, HttpOptions, HttpResponse}
 object Request {
 
   private
-  val uri: String = "http://localhost:9000/"
+  val uri: String = "http://ec2-18-225-9-119.us-east-2.compute.amazonaws.com:9000/"
 
   private
   def send(uri: String, body: String) = {
