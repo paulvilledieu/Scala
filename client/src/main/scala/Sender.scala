@@ -1,4 +1,4 @@
-import Request.sendMessage
+import Request.{sendMessage, sendAlert}
 import play.api.libs.json._
 
 object Sender {
@@ -53,9 +53,11 @@ object Sender {
   )
 
   def send_msg(msg: Message) = {
-    //post traitements des différents types de messages
     val json = Json.toJson(msg)(messageWrites)
     println("Sending " +  json.toString())
-    println(sendMessage(json.toString()).right.toString)
+    if (msg.msg_type > 0)
+      println(sendAlert(json.toString()).right.toString)
+    else
+      println(sendMessage(json.toString()).right.toString)
   }
 }
