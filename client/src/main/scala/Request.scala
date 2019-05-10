@@ -1,10 +1,14 @@
-import scalaj.http.{Http, HttpOptions}
+import scalaj.http.{Http, HttpOptions, HttpResponse}
 
 object Request {
 
-  def sendMessage(body: String) = {
+  private
+  val uri: String = "http://localhost:9000/"
+
+  private
+  def send(uri: String, body: String) = {
     try {
-      Right(Http("http://localhost:9000/").postData(body)
+      Right(Http(uri).postData(body)
         .header("Content-Type", "application/json")
         .header("Charset", "UTF-8")
         .option(HttpOptions.readTimeout(10000))
@@ -14,4 +18,14 @@ object Request {
       case exception: Exception => Left(exception.toString)
     }
   }
+
+  def sendMessage(body: String): Either[String, HttpResponse[String]] = {
+    send(uri + "datas", body)
+  }
+
+  def sendAlert(body: String): Either[String, HttpResponse[String]] = {
+    send(uri + "alerts", body)
+  }
+
+
 }
