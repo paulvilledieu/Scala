@@ -6,7 +6,7 @@ import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class Data(id: Long, timestamp: Long, objectId: Long, latitude: String, longitude: String, temperature: String, batteryRemaining: String, heartRate: String, state: String, message: String, isAlert: Boolean)
+case class Data(id: Long, timestamp: Long, objectId: String, latitude: Double, longitude: Double, temperature: Float, batteryRemaining: Int, heartRate: Float, state: String, message: String, isAlert: Boolean)
 
 import slick.jdbc.MySQLProfile.api._
 
@@ -14,12 +14,12 @@ class DataTableDef(tag: Tag) extends Table[Data](tag, "data") {
 
   def id = column[Long]("id", O.PrimaryKey,O.AutoInc)
   def timestamp = column[Long]("timestamp")
-  def objectId = column[Long]("objectId")
-  def latitude = column[String]("latitude")
-  def longitude = column[String]("longitude")
-  def temperature = column[String]("temperature")
-  def batteryRemaining = column[String]("batteryRemaining")
-  def heartRate = column[String]("heartRate")
+  def objectId = column[String]("objectId")
+  def latitude = column[Double]("latitude")
+  def longitude = column[Double]("longitude")
+  def temperature = column[Float]("temperature")
+  def batteryRemaining = column[Int]("batteryRemaining")
+  def heartRate = column[Float]("heartRate")
   def state = column[String]("state")
   def message = column[String]("message")
   def isAlert = column[Boolean]("isAlert")

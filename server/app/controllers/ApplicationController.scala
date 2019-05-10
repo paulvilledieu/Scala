@@ -22,13 +22,13 @@ class ApplicationController @Inject()(cc: ControllerComponents, dataService: Dat
 
   def addData() = Action.async { implicit request: Request[AnyContent] =>
     val json = request.body.asJson.get
-    val timestamp = (json \ "timestamp").as[String].toLong
-    val objectId = (json \ "objectId").as[String].toLong
-    val latitude = (json \ "latitude").as[String]
-    val longitude = (json \ "longitude").as[String]
-    val temperature = (json \ "temperature").as[String]
-    val batteryRemaining = (json \ "batteryRemaining").as[String]
-    val heartRate = (json \ "heartRate").as[String]
+    val timestamp = (json \ "timestamp").as[Long]
+    val objectId = (json \ "objectId").as[String]
+    val latitude = (json \ "latitude").as[Double]
+    val longitude = (json \ "longitude").as[Double]
+    val temperature = (json \ "temperature").as[Float]
+    val batteryRemaining = (json \ "batteryRemaining").as[Int]
+    val heartRate = (json \ "heartRate").as[Float]
     val state = (json \ "state").as[String]
     val message = (json \ "message").as[String]
     val data = Data(1, timestamp, objectId, latitude, longitude, temperature, batteryRemaining, heartRate, state, message, false)
@@ -37,13 +37,13 @@ class ApplicationController @Inject()(cc: ControllerComponents, dataService: Dat
 
   def addAlert() = Action.async { implicit request: Request[AnyContent] =>
     val json = request.body.asJson.get
-    val timestamp = (json \ "timestamp").as[String].toLong
-    val objectId = (json \ "objectId").as[String].toLong
-    val latitude = (json \ "latitude").as[String]
-    val longitude = (json \ "longitude").as[String]
-    val temperature = (json \ "temperature").as[String]
-    val batteryRemaining = (json \ "batteryRemaining").as[String]
-    val heartRate = (json \ "heartRate").as[String]
+    val timestamp = (json \ "timestamp").as[Long]
+    val objectId = (json \ "objectId").as[String]
+    val latitude = (json \ "latitude").as[Double]
+    val longitude = (json \ "longitude").as[Double]
+    val temperature = (json \ "temperature").as[Float]
+    val batteryRemaining = (json \ "batteryRemaining").as[Int]
+    val heartRate = (json \ "heartRate").as[Float]
     val state = (json \ "state").as[String]
     val message = (json \ "message").as[String]
     val data = Data(1, timestamp, objectId, latitude, longitude, temperature, batteryRemaining, heartRate, state, message, true)
