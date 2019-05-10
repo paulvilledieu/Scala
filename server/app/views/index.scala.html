@@ -25,7 +25,7 @@
                 <td>@data.temperature</td>
                 <td>@data.batteryRemaining</td>
                 <td>@data.heartRate</td>
-                <td><a href="@routes.ApplicationController.deleteData(data.id)">delete</a></td>
+                <td><a href="@routes.ApplicationController.deleteData(data.id.get)">delete</a></td>
               </tr>
             }
           }
@@ -61,7 +61,7 @@
                 <td>@data.heartRate</td>
                 <td>@data.state</td>
                 <td>@data.message</td>
-                <td><a href="@routes.ApplicationController.deleteData(data.id)">delete</a></td>
+                <td><a href="@routes.ApplicationController.deleteData(data.id.get)">delete</a></td>
               </tr>
             }
           }

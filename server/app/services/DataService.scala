@@ -8,7 +8,7 @@ import scala.concurrent.Future
 class DataService @Inject() (datas: Datas) {
 
   def addData(data: Data): Future[String] = {
-    datas.add(data)
+    datas.safeAdd(data)
   }
 
   def deleteData(id: Long): Future[Int] = {

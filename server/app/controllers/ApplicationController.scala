@@ -1,10 +1,11 @@
 package controllers
 
 import javax.inject._
-import models.{Data}
+import models.Data
 import play.api.Logging
 import play.api.mvc._
 import services.DataService
+import play.api.libs.json.{JsValue, Json}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -18,10 +19,7 @@ class ApplicationController @Inject()(cc: ControllerComponents, dataService: Dat
     }
   }
 
-  import play.api.libs.json.Json
-
-  def addData() = Action.async { implicit request: Request[AnyContent] =>
-    val json = request.body.asJson.get
+  def parseMessage(json: JsValue, isAlert: Boolean) = {
     val timestamp = (json \ "timestamp").as[Long]
     val objectId = (json \ "objectId").as[String]
     val latitude = (json \ "latitude").as[Double]
@@ -31,23 +29,19 @@ class ApplicationController @Inject()(cc: ControllerComponents, dataService: Dat
     val heartRate = (json \ "heartRate").as[Float]
     val state = (json \ "state").as[String]
     val message = (json \ "message").as[String]
-    val data = Data(1, timestamp, objectId, latitude, longitude, temperature, batteryRemaining, heartRate, state, message, false)
-    dataService.addData(data).map( _ => Redirect(routes.ApplicationController.index()))
+    Data(None, timestamp, objectId, latitude, longitude, temperature, batteryRemaining, heartRate, state, message, isAlert)
+  }
+
+  def addData() = Action.async { implicit request: Request[AnyContent] =>
+    val json = request.body.asJson.get
+    val data = parseMessage(json, isAlert = false)
+    dataService.addData(data).flatMap( str => Future { Ok(str) })
   }
 
   def addAlert() = Action.async { implicit request: Request[AnyContent] =>
     val json = request.body.asJson.get
-    val timestamp = (json \ "timestamp").as[Long]
-    val objectId = (json \ "objectId").as[String]
-    val latitude = (json \ "latitude").as[Double]
-    val longitude = (json \ "longitude").as[Double]
-    val temperature = (json \ "temperature").as[Float]
-    val batteryRemaining = (json \ "batteryRemaining").as[Int]
-    val heartRate = (json \ "heartRate").as[Float]
-    val state = (json \ "state").as[String]
-    val message = (json \ "message").as[String]
-    val data = Data(1, timestamp, objectId, latitude, longitude, temperature, batteryRemaining, heartRate, state, message, true)
-    dataService.addData(data).map( _ => Redirect(routes.ApplicationController.index()))
+    val data = parseMessage(json, isAlert = true)
+    dataService.addData(data).flatMap( str => Future { Ok(str) })
   }
 
   def deleteData(id: Long) = Action.async { implicit request: Request[AnyContent] =>
