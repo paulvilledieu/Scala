@@ -22,7 +22,6 @@ class ApplicationController @Inject()(cc: ControllerComponents, dataService: Dat
 
   def addData() = Action.async { implicit request: Request[AnyContent] =>
     val json = request.body.asJson.get
-    val id = (json \ "id").as[String].toLong
     val timestamp = (json \ "timestamp").as[String].toLong
     val objectId = (json \ "objectId").as[String].toLong
     val latitude = (json \ "latitude").as[String]
@@ -32,7 +31,7 @@ class ApplicationController @Inject()(cc: ControllerComponents, dataService: Dat
     val heartRate = (json \ "heartRate").as[String]
     val state = (json \ "state").as[String]
     val message = (json \ "message").as[String]
-    val data = Data(id, timestamp, objectId, latitude, longitude, temperature, batteryRemaining, heartRate, state, message, false)
+    val data = Data(1, timestamp, objectId, latitude, longitude, temperature, batteryRemaining, heartRate, state, message, false)
     dataService.addData(data).map( _ => Redirect(routes.ApplicationController.index()))
   }
 
