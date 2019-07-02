@@ -11,9 +11,10 @@ object Sender {
                      latitude: Double,
                      state: String,
                      msg: String,
-                     hearth_rate: Float,
+                     heart_rate: Float,
                      temperature: Float,
                      msg_type: Int)
+
 
   def csv_parser(str: String): Message  =  {
     val msg = str.split(',')
@@ -48,7 +49,7 @@ object Sender {
     "longitude" -> message.longitude,
     "temperature" -> message.temperature,
     "batteryRemaining" -> message.battery,
-    "heartRate" -> message.hearth_rate,
+    "heartRate" -> message.heart_rate,
     "state" -> message.state,
     "message" -> message.msg
   )

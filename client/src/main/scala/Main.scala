@@ -17,7 +17,7 @@ object Main extends App {
     }
   }
 
-  getDirFiles("./src/test/resources", List(".csv", ".json")) match {
+  getDirFiles("./data/", List(".csv", ".json")) match {
     case Left(x) => x
     case Right(x) =>
       val future = parseFiles(x)
