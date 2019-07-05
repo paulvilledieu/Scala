@@ -1,4 +1,5 @@
-import Request.{sendMessage, sendAlert}
+//import Request.{sendMessage, sendAlert}
+import Producer.{sendMessage, sendAlert}
 import play.api.libs.json._
 
 object Sender {
