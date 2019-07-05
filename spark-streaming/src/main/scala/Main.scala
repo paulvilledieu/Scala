@@ -22,7 +22,7 @@ object Main extends App {
       longitude: Double,
       temperature: Float,
       batteryRemaining: Int,
-      hearRate: Float,
+      heartRate: Float,
       state: String,
       message: String,
       hdfs_timestamp: Long,
@@ -38,7 +38,7 @@ object Main extends App {
       (JsPath \ "longitude").read[Double] and
       (JsPath \ "temperature").read[Float] and
       (JsPath \ "batteryRemaining").read[Int] and
-      (JsPath \ "hearRate").read[Float] and
+      (JsPath \ "heartRate").read[Float] and
       (JsPath \ "state").read[String] and
       (JsPath \ "message").read[String]
 
@@ -71,7 +71,16 @@ object Main extends App {
       PreferConsistent,
       Subscribe[String, String](topics, kafkaParams)
     )
-    stream.map(record => strToMessage(record.value())).print()
+    stream.map(record => strToMessage(record.value))
+      .cache()
+      .foreachRDD(rdd => {
+        if (rdd.count() > 0) {
+          val sqlContext = SparkSession.builder.config(rdd.sparkContext.getConf).getOrCreate()
+          import sqlContext.implicits._
+          val df = rdd.toDF()
+          df.write.format("parquet").mode("append").save(s"data")
+        }
+    })
   }
 
   def handleAlerts(streamingContext: StreamingContext): Unit = {
@@ -105,23 +114,8 @@ object Main extends App {
   val streamingContext = new StreamingContext(sparkConfig, Seconds(1))
   streamingContext.sparkContext.setLogLevel("ERROR")
 
-  //saveToDisk(streamingContext)
+  saveToDisk(streamingContext)
   //handleAlerts(streamingContext)
-  val kafkaParams = Map[String, Object](
-    "bootstrap.servers" -> "localhost:9092",
-    "key.deserializer" -> classOf[StringDeserializer],
-    "value.deserializer" -> classOf[StringDeserializer],
-    "group.id" -> "0",
-    "auto.offset.reset" -> "latest",
-    "enable.auto.commit" -> (false: java.lang.Boolean)
-  )
-  val topics = Array("standard", "alert")
-  val stream = KafkaUtils.createDirectStream[String, String](
-    streamingContext,
-    PreferConsistent,
-    Subscribe[String, String](topics, kafkaParams)
-  )
-  stream.map(record => strToMessage(record.value)).print()
 
   streamingContext.start()
   streamingContext.awaitTermination()
