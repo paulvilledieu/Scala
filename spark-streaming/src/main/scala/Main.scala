@@ -1,11 +1,10 @@
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.SparkConf
 import org.apache.spark.sql._
 import org.apache.spark.streaming._
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 
-import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.streaming.kafka010._
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
@@ -25,11 +24,11 @@ object Main extends App {
       heartRate: Float,
       state: String,
       message: String,
-      hdfs_timestamp: Long,
-      raw: String)
+      hdfs_timestamp: Long = 0,
+      raw: String = "")
 
   val defaultMessage = Message("Error format",
-    0, 0, 0, 0, 0, 0, "", "", 0, "")
+    0, 0, 0, 0, 0, 0, "", "")
 
   implicit val MReader: Reads[Message] = (
     (JsPath \ "objectId").read[String] and
@@ -41,9 +40,8 @@ object Main extends App {
       (JsPath \ "heartRate").read[Float] and
       (JsPath \ "state").read[String] and
       (JsPath \ "message").read[String]
-
   )((f1, f2, f3, f4, f5, f6, f7, f8, f9) =>
-  Message(f1, f2, f3, f4, f5, f6, f7, f8, f9, 0, ""))
+  Message(f1, f2, f3, f4, f5, f6, f7, f8, f9))
 
   implicit val MWrite: Writes[Message] = Json.writes[Message]
 
