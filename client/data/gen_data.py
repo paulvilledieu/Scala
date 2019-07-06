@@ -2,12 +2,17 @@ import sys
 import random
 import json
 import inspect
+
 from json import JSONEncoder
+
+
+if len(sys.argv) < 2:
+    print("USAGE: python3 gen_data.py <NB_DATA> [json|csv]")
+    exit(1)
 
 class Encoder(JSONEncoder):
     def default(self, o):
         return o.__dict__
-
 
 delta_time = 300000
 battery_loss_chance = 0.003 # probability of losing 5% battery
@@ -91,9 +96,6 @@ class User(object):
             attributs = [t[1] for t in self.__dict__.items()]
             attributs = [str(a) for a in attributs]
             print(','.join(attributs))
-
-if len(sys.argv) < 2:
-    print("USAGE: python3 gen_data.py <NB_DATA> [json|csv]")
 
 data_size = int(sys.argv[1])
 data_type = "json" if len(sys.argv) < 3 else sys.argv[2]
