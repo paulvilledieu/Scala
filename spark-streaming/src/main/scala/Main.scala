@@ -92,22 +92,17 @@ object Main extends App {
       "auto.offset.reset" -> "latest",
       "enable.auto.commit" -> (false: java.lang.Boolean)
     )
-    val topics2 = Array("alert")
-    val stream2 = KafkaUtils.createDirectStream[String, String](
+    val topics = Array("alert")
+    val stream = KafkaUtils.createDirectStream[String, String](
       streamingContext,
       PreferConsistent,
-      Subscribe[String, String](topics2, kafkaParams2)
+      Subscribe[String, String](topics, kafkaParams2)
     )
-    val dstream = stream2.map(_.value)
-    dstream.cache()
-    dstream.foreachRDD(
-      rdd => {
-        val sqlContext = SparkSession.builder.config(rdd.sparkContext.getConf).getOrCreate()
-        import sqlContext.implicits._
-        val df = rdd.toDF("msg")
-        df.write.format("parquet").mode("append").save(s"data")
-      }
-    )
+    stream.map(x => strToMessage(x.value))
+        .cache()
+        .foreachRDD(rdd => {
+          rdd.map(x => x.message).foreach(println)
+        })
   }
 
   val sparkConfig = new SparkConf().setMaster("local[*]").setAppName("SparkKafkaStream")
@@ -115,7 +110,7 @@ object Main extends App {
   streamingContext.sparkContext.setLogLevel("ERROR")
 
   saveToDisk(streamingContext)
-  //handleAlerts(streamingContext)
+  handleAlerts(streamingContext)
 
   streamingContext.start()
   streamingContext.awaitTermination()
