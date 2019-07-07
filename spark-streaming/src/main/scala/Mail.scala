@@ -1,5 +1,7 @@
 import org.apache.commons.mail._
 
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
+
 object Mail {
 
   case class Mail(
@@ -13,19 +15,23 @@ object Mail {
      attachment: Option[java.io.File] = None
      )
 
-  def sendMail(mail: Mail): Unit = {
-    val commonsMail = new SimpleEmail()
-    commonsMail.setHostName("smtp.gmail.com")
-    commonsMail.setAuthentication("scalasparkepita@gmail.com", "Azerty-1234")
-    commonsMail.setTLS(true)
-    mail.to foreach commonsMail.addTo
-    mail.cc foreach commonsMail.addCc
-    mail.bcc foreach commonsMail.addBcc
+  def sendMail(mail: Mail) = {
+    implicit val context: ExecutionContextExecutor = ExecutionContext.Implicits.global
+    Future {
+      val commonsMail = new SimpleEmail()
+      commonsMail.setHostName("smtp.gmail.com")
+      commonsMail.setAuthentication("scalasparkepita@gmail.com", "Azerty-1234")
+      commonsMail.setTLS(true)
 
-    commonsMail
+      mail.to foreach commonsMail.addTo
+      mail.cc foreach commonsMail.addCc
+      mail.bcc foreach commonsMail.addBcc
+
+      commonsMail
       .setMsg(mail.message)
       .setFrom(mail.from._1, mail.from._2)
       .setSubject(mail.subject)
       .send()
+    }
   }
 }
