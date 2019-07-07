@@ -5,7 +5,6 @@ import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession, SaveMode}
 import org.apache.spark.sql.functions._
 import org.apache.spark.ml.feature.Bucketizer
-import slick.jdbc.H2Profile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -17,7 +16,7 @@ object Analytics extends App {
                     .appName("DFWC")
                     .master("local[*]")
                     .getOrCreate()
-        ss.read.load("../hdfs-data")
+        ss.read.load("../hdfs-data").dropDuplicates()
     }
 
     def nbAlerts(df : DataFrame) = {
@@ -64,16 +63,15 @@ object Analytics extends App {
         df.filter(col("state").isin("Failed"))
             .groupBy("batteryRemaining")
             .count()
-            .show
+            .withColumnRenamed("count","nbPanne")
     }
 
     def nbPanneTemperature(df : DataFrame) = {
-        val splits = Range.Double(-15,50,5).toArray
-        val bucketizer = new Bucketizer()
-                            .setInputCol("temperature")
-                            .setOutputCol("bucket")
-                            .setSplits(splits)
-        val bucketed = bucketizer.transform(df.filter(col("state").isin("Failed")))
+        df.filter(col("state").isin("Failed"))
+            .withColumn("temperature", round(df.col("temperature")))
+            .groupBy("temperature")
+            .count()
+            .withColumnRenamed("count","nbPanne")
         
     }
 
@@ -85,18 +83,33 @@ object Analytics extends App {
                 .join(nbPanneNorth(df), Seq("date"), joinType="outer")
                 .join(nbPanneSouth(df), Seq("date"), joinType="outer")
     tmp.show()
+
+    val tmp2 = nbPanneBattery(df)
+    tmp2.show()
+
+    val tmp3 = nbPanneTemperature(df)
+    tmp3.show()
+
     val prop = new java.util.Properties
-    prop.setProperty("user", "JhuSBBQqIY")
-    prop.setProperty("password", "1Ctsi7w9dR")
+    prop.setProperty("user", "root")
+    prop.setProperty("password", "password")
     prop.setProperty("driver", "com.mysql.jdbc.Driver")
     
-    val url = "jdbc:mysql://remotemysql.com/JhuSBBQqIY"
-    
-    val table = "globals"
-    
+    val url = "jdbc:mysql://51.75.253.142:3306/scaab?serverTimezone=UTC"
+        
     try {
-        tmp.write.jdbc(url, table, prop)
+        tmp.write.jdbc(url, "globals", prop)
     } catch {
-        case _: Throwable => tmp.write.mode(SaveMode.Overwrite).jdbc(url, table, prop)
+        case _: Throwable => tmp.write.mode(SaveMode.Overwrite).jdbc(url, "globals", prop)
+    }
+    try {
+        tmp2.write.jdbc(url, "battery", prop)
+    } catch {
+        case _: Throwable => tmp2.write.mode(SaveMode.Overwrite).jdbc(url, "battery", prop)
+    }
+    try {
+        tmp3.write.jdbc(url, "temperature", prop)
+    } catch {
+        case _: Throwable => tmp3.write.mode(SaveMode.Overwrite).jdbc(url, "temperature", prop)
     }
 }
