@@ -6,7 +6,7 @@ from json import JSONEncoder
 
 class Encoder(JSONEncoder):
     def default(self, o):
-        return o.__dict__    
+        return o.__dict__
 
 
 delta_time = 300000
@@ -20,11 +20,11 @@ heart_attack = 0
 
 class User(object):
 
-    def __init__(self): 
+    def __init__(self):
         self.id = "M-" + str(random.randrange(1000, 9999))
         self.timestamp = 1551955320 + random.randrange(10000)
         self.battery = random.randrange(0, 101, 5)
-        self.longitude = random.uniform(-180, 180) 
+        self.longitude = random.uniform(-180, 180)
         self.latitude = random.uniform(-180, 180)
         self.state = ""
         self.msg = ""
@@ -63,7 +63,7 @@ class User(object):
             self.battery = max(0, self.battery)
         elif random.random() < battery_charge_chance:
             in_charge = True
-        
+
         # Heart
         if random.random() < heart_attack_rate:
             heart_attack = 3
@@ -75,8 +75,8 @@ class User(object):
         else:
             self.heart_rate += random.randrange(-3,3)
             self.heart_rate = 50 if self.heart_rate < 50 else self.heart_rate
-            self.heart_rate = 130 if self.heart_rate > 130 else self.heart_rate 
-        
+            self.heart_rate = 130 if self.heart_rate > 130 else self.heart_rate
+
         # Other
         self.longitude += (random.random() - 0.5) / 10000
         self.latitude += (random.random() - 0.5) / 10000
@@ -89,9 +89,9 @@ class User(object):
             print(Encoder().encode(self))
         else:
             attributs = [t[1] for t in self.__dict__.items()]
-            attributs = ['"' + a + '"' if isinstance(a, str) else str(a) for a in attributs]
+            attributs = [str(a) for a in attributs]
             print(','.join(attributs))
-            
+
 if len(sys.argv) < 2:
     print("USAGE: python3 gen_data.py <NB_DATA> [json|csv]")
 
