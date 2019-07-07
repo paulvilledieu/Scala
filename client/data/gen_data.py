@@ -42,7 +42,12 @@ class User(object):
         self.state = "Good"
         self.msg = ""
         self.msg_type = 0
-        if heart_attack:
+        p_fail = (1 - self.battery / 100) * 0.75 + (self.temperature + 10) / 50 * 0.25 - 0.3
+        if random.random() < p_fail:
+            self.state = "Failed"
+            self.msg = "Can not collect the heart rate"
+            self.msg_type = 3
+        elif heart_attack:
             self.state = "Alert"
             self.msg = "Heart rate"
             self.msg_type = 2
