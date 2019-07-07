@@ -23,9 +23,9 @@ object Mail {
     mail.bcc foreach commonsMail.addBcc
 
     commonsMail
-    .setMsg(mail.message)
-    .setFrom(mail.from._1, mail.from._2)
-    .setSubject(mail.subject)
-    .send()
+      .setMsg(mail.message)
+      .setFrom(mail.from._1, mail.from._2)
+      .setSubject(mail.subject)
+      .send()
   }
 }
