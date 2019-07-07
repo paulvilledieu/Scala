@@ -1,4 +1,4 @@
-name := "Test spark-streaming"
+name := "spark-streaming"
 version := "1.0"
 scalaVersion := "2.11.11"
 

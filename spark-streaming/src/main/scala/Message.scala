@@ -50,8 +50,9 @@ object Message {
     new Mail(
       from=("scalasparkepita@gmail.com", "Spark EPITA"),
       to=Seq("scalasparkepita@gmail.com"),
-      subject=message.state,
-      message=message.message
+      subject=s"${message.state} ${message.objectId}",
+      message=s"Your ${message.message} is unusual: ${message.heartRate} bpm\n" +
+        s"latitude: ${message.latitude}, longitude: ${message.longitude}\n "
     )
   }
 }
