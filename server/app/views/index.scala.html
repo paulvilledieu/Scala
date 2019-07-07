@@ -1,5 +1,144 @@
-@(global: Seq[models.GlobalStats])(implicit request: RequestHeader)
+@(times: Seq[models.TimeStats])(implicit request: RequestHeader)
 @main() {
-    <a href="@routes.ApplicationController.fails()">fails</a>
-    <a href="@routes.ApplicationController.getUser(global.size)">user</a>
+    <nav class="navbar navbar-dark bg-dark">
+        <span class="navbar-brand mb-0 h1">Dashboard</span>
+    </nav>
+
+    <div class="container">
+        <h2 style="text-align: center">Failures over time</h2>
+        <div class="row">
+            <div class="col-sm">
+                <canvas id="nbPanne" width="100" height="100"></canvas>
+            </div>
+            <div class="col-sm">
+                <canvas id="south" width="100" height="100"></canvas>
+            </div>
+            <div class="col-sm">
+                <canvas id="north" width="100" height="100"></canvas>
+            </div>
+        </div>
+        <h2 style="text-align: center">Causes of failures</h2>
+        <div class="row">
+            <div class="col-sm">
+
+            </div>
+            <div class="col-sm">
+
+            </div>
+            <div class="col-sm">
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@@2.8.0"></script>
+    <script>
+            var ctx = document.getElementById('nbPanne').getContext('2d');
+            var myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["1 Jully", "2 Jully", "3 Jully", "4 Jully", "5 Jully", "6 Jully", "7 Jully"],
+                    datasets: [{
+                        data: [
+                            @for(day <- times){
+                            @day.nbPanne,
+                            }
+                        ],
+                        label: "devices down",
+                        borderColor: 'rgb(191, 57, 23)',
+                        pointBackgroundColor: 'rgb(191, 57, 23)',
+                        backgroundColor: 'rgba(191, 57, 23, 0.3)'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text:
+                                'Number of failures over time'
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: 50
+                            }
+                        }]
+                    }
+                }
+            });
+    </script>
+
+    <script>
+            var ctx = document.getElementById('north').getContext('2d');
+            var myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["1 Jully", "2 Jully", "3 Jully", "4 Jully", "5 Jully", "6 Jully", "7 Jully"],
+                    datasets: [{
+                        data: [
+                            @for(day <- times){
+                            @day.nbPanneNorth,
+                            }
+                        ],
+                        label: "devices down",
+                        borderColor: 'rgb(191, 57, 23)',
+                        pointBackgroundColor: 'rgb(191, 57, 23)',
+                        backgroundColor: 'rgba(191, 57, 23, 0.3)'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Number of devices down in the north over time'
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: 50
+                            }
+                        }]
+                    }
+                }
+            });
+    </script>
+
+    <script>
+            var ctx = document.getElementById('south').getContext('2d');
+            var myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["1 Jully", "2 Jully", "3 Jully", "4 Jully", "5 Jully", "6 Jully", "7 Jully"],
+                    datasets: [{
+                        data: [
+                            @for(day <- times){
+                            @day.nbPanneSouth,
+                            }
+                        ],
+                        label: "devices down",
+                        borderColor: 'rgb(191, 57, 23)',
+                        pointBackgroundColor: 'rgb(191, 57, 23)',
+                        backgroundColor: 'rgba(191, 57, 23, 0.3)'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Number of devices down in the south over time'
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                max: 50
+                            }
+                        }]
+                    }
+                }
+            });
+    </script>
 }
