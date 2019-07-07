@@ -30,7 +30,7 @@ class User(object):
         self.timestamp = 1551955320 + random.randrange(10)
         self.battery = random.randrange(0, 101, 5)
         self.longitude = random.uniform(-180, 180)
-        self.latitude = random.uniform(-180, 180)
+        self.latitude = random.uniform(-90, 90)
         self.state = ""
         self.msg = ""
         self.heart_rate = 50 + random.randrange(20)
@@ -84,10 +84,11 @@ class User(object):
 
         # Other
         self.longitude += (random.random() - 0.5) / 10000
+        self.longitude = max(-180, min(180, self.longitude))
         self.latitude += (random.random() - 0.5) / 10000
+        self.latitude = max(-90, min(90, self.latitude))
         self.temperature += random.randrange(-5, 5) / 10
-        self.temperature = min(40, self.temperature)
-        self.temperature = max(-10, self.temperature)
+        self.temperature = max(-10, min(40, self.temperature))
 
         self.get_state()
 

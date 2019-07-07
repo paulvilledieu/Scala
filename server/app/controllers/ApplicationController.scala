@@ -14,7 +14,7 @@ import scala.concurrent.Future
 class ApplicationController @Inject()(cc: ControllerComponents, dataService: DataService) extends AbstractController(cc) with Logging {
 
   def index() = Action.async { implicit request: Request[AnyContent] =>
-    dataService.listAllDatas map { datas =>
+    globalService.listAllDatas map { datas =>
       Ok(views.html.index(datas))
     }
   }
@@ -50,4 +50,7 @@ class ApplicationController @Inject()(cc: ControllerComponents, dataService: Dat
     }
   }
 
+  def fails() = play.mvc.Results.ok()
+
+  def getUser(id: Long) = play.mvc.Results.ok()
 }
