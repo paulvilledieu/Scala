@@ -35,7 +35,7 @@ object Main extends App {
           val sqlContext = SparkSession.builder.config(rdd.sparkContext.getConf).getOrCreate()
           import sqlContext.implicits._
           val df = rdd.toDF()
-          df.write.format("parquet").mode("append").save(s"data")
+          df.write.format("parquet").mode("append").save(s"../hdfs-data")
         }
     })
   }
