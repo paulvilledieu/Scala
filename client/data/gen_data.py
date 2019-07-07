@@ -14,9 +14,9 @@ class Encoder(JSONEncoder):
     def default(self, o):
         return o.__dict__
 
-delta_time = 300000
+delta_time = 300
 battery_loss_chance = 0.003 # probability of losing 5% battery
-battery_charge_chance = 0.001 # probability that the user will recharge the device
+battery_charge_chance = 0.002 # probability that the user will recharge the device
 battery_charge_speed = 5
 heart_attack_rate = 0.001 # probavility that the user is doing an heart attack
 in_charge = False
@@ -27,14 +27,14 @@ class User(object):
 
     def __init__(self):
         self.id = "M-" + str(random.randrange(1000, 9999))
-        self.timestamp = 1551955320 + random.randrange(10000)
+        self.timestamp = 1551955320 + random.randrange(10)
         self.battery = random.randrange(0, 101, 5)
         self.longitude = random.uniform(-180, 180)
         self.latitude = random.uniform(-180, 180)
         self.state = ""
         self.msg = ""
         self.heart_rate = 50 + random.randrange(20)
-        self.temperature = random.randrange(-50, 400) / 10
+        self.temperature = random.randrange(-100, 400) / 10
         self.msg_type = 0
         self.get_state()
 
@@ -52,7 +52,7 @@ class User(object):
             self.msg_type = 1
 
     def next_iter(self):
-        self.timestamp += delta_time + random.randrange(int(delta_time / 60))
+        self.timestamp += delta_time + random.randrange(delta_time // 60)
         global in_charge
         global heart_attack
         global heart_attack_rate
@@ -86,6 +86,8 @@ class User(object):
         self.longitude += (random.random() - 0.5) / 10000
         self.latitude += (random.random() - 0.5) / 10000
         self.temperature += random.randrange(-5, 5) / 10
+        self.temperature = min(40, self.temperature)
+        self.temperature = max(-10, self.temperature)
 
         self.get_state()
 
