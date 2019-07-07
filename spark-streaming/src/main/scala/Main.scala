@@ -1,58 +1,17 @@
 import org.apache.spark.SparkConf
 import org.apache.spark.sql._
 import org.apache.spark.streaming._
-import play.api.libs.json._
-import play.api.libs.json.Reads._
-import play.api.libs.functional.syntax._
+
 
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.streaming.kafka010._
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 
+import Message.{strToMessage, messageToMail}
+import Mail.sendMail
+
 object Main extends App {
-
-  case class Test(data: String)
-
-  case class Message(
-      objectId: String,
-      timestamp: Long,
-      latitude: Double,
-      longitude: Double,
-      temperature: Float,
-      batteryRemaining: Int,
-      heartRate: Float,
-      state: String,
-      message: String,
-      hdfs_timestamp: Long = 0,
-      raw: String = "")
-
-  val defaultMessage = Message("Error format",
-    0, 0, 0, 0, 0, 0, "", "")
-
-  implicit val MReader: Reads[Message] = (
-    (JsPath \ "objectId").read[String] and
-      (JsPath \ "timestamp").read[Long] and
-      (JsPath \ "latitude").read[Double] and
-      (JsPath \ "longitude").read[Double] and
-      (JsPath \ "temperature").read[Float] and
-      (JsPath \ "batteryRemaining").read[Int] and
-      (JsPath \ "heartRate").read[Float] and
-      (JsPath \ "state").read[String] and
-      (JsPath \ "message").read[String]
-  )((f1, f2, f3, f4, f5, f6, f7, f8, f9) =>
-  Message(f1, f2, f3, f4, f5, f6, f7, f8, f9))
-
-  implicit val MWrite: Writes[Message] = Json.writes[Message]
-
-  implicit val MFormat: Format[Message] = Format(MReader, MWrite)
-
-  def strToMessage(str: String) = {
-    Json.parse(str).validate[Message] match {
-      case JsError(_) => defaultMessage.copy(raw=str, hdfs_timestamp = System.currentTimeMillis())
-      case JsSuccess(m, _) => m.copy(raw=str, hdfs_timestamp = System.currentTimeMillis())
-    }
-  }
 
   def saveToDisk(streamingContext: StreamingContext): Unit = {
     val kafkaParams = Map[String, Object](
@@ -99,7 +58,9 @@ object Main extends App {
     stream.map(x => strToMessage(x.value))
         .cache()
         .foreachRDD(rdd => {
-          rdd.map(x => x.message).foreach(println)
+          rdd.filter(_.state.contains("Alert"))
+            .map(messageToMail)
+            .foreach(sendMail)
         })
   }
 

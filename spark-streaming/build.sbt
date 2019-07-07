@@ -10,4 +10,4 @@ libraryDependencies ++= Seq(
         )
 libraryDependencies += "org.apache.spark" % "spark-streaming-kafka-0-10_2.11" % "2.0.0"
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.4.0"
-
+libraryDependencies += "org.apache.commons" % "commons-email" % "1.2"
