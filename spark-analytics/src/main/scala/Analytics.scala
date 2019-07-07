@@ -92,10 +92,10 @@ object Analytics extends App {
 
     val prop = new java.util.Properties
     prop.setProperty("user", "root")
-    prop.setProperty("password", "password")
+    prop.setProperty("password", "root")
     prop.setProperty("driver", "com.mysql.jdbc.Driver")
     
-    val url = "jdbc:mysql://51.75.253.142:3306/scaab?serverTimezone=UTC"
+    val url = "jdbc:mysql://127.0.0.1:3306/scaladb?serverTimezone=UTC"
         
     try {
         tmp.write.jdbc(url, "globals", prop)
