@@ -41,8 +41,8 @@ object Message {
 
   def strToMessage(str: String) = {
     Json.parse(str).validate[Message] match {
-      case JsError(_) => defaultMessage.copy(raw=str, hdfs_timestamp = System.currentTimeMillis())
-      case JsSuccess(m, _) => m.copy(raw=str, hdfs_timestamp = System.currentTimeMillis())
+      case JsError(_) => defaultMessage.copy(raw=str, hdfs_timestamp = System.currentTimeMillis() / 1000)
+      case JsSuccess(m, _) => m.copy(raw=str, hdfs_timestamp = System.currentTimeMillis() / 1000)
     }
   }
 
