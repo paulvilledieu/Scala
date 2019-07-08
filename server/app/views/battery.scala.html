@@ -5,16 +5,14 @@
     </nav>
 
     <div class="container">
-        <h2 style="text-align: center">Failures over time</h2>
+        <h2 style="text-align: center">Failures per percent of battery</h2>
         <div class="row">
+            <div class="col-sm">
+            </div>
             <div class="col-sm">
                 <canvas id="nbPanne" width="100" height="100"></canvas>
             </div>
             <div class="col-sm">
-                <canvas id="south" width="100" height="100"></canvas>
-            </div>
-            <div class="col-sm">
-                <canvas id="north" width="100" height="100"></canvas>
             </div>
         </div>
     </div>
@@ -29,7 +27,11 @@
             var myLineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ["1 Jully", "2 Jully", "3 Jully", "4 Jully", "5 Jully", "6 Jully", "7 Jully"],
+                    labels: [
+                        @for(i <- List.range(0, 20)) {
+                            @(i * 5),
+                        }
+                    ],
                     datasets: [{
                         data: [
                             @for(day <- times){
@@ -46,75 +48,7 @@
                     title: {
                         display: true,
                         text:
-                                'Number of failures over time'
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0
-                            }
-                        }]
-                    }
-                }
-            });
-    </script>
-
-    <script>
-            var ctx = document.getElementById('north').getContext('2d');
-            var myLineChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ["1 Jully", "2 Jully", "3 Jully", "4 Jully", "5 Jully", "6 Jully", "7 Jully"],
-                    datasets: [{
-                        data: [
-                            @for(day <- times){
-                            @day.nbPanneNorth,
-                            }
-                        ],
-                        label: "number of failures",
-                        borderColor: 'rgb(191, 57, 23)',
-                        pointBackgroundColor: 'rgb(191, 57, 23)',
-                        backgroundColor: 'rgba(191, 57, 23, 0.3)'
-                    }]
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Number of devices down in the north over time'
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0
-                            }
-                        }]
-                    }
-                }
-            });
-    </script>
-
-    <script>
-            var ctx = document.getElementById('south').getContext('2d');
-            var myLineChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ["1 Jully", "2 Jully", "3 Jully", "4 Jully", "5 Jully", "6 Jully", "7 Jully"],
-                    datasets: [{
-                        data: [
-                            @for(day <- times){
-                            @day.nbPanneSouth,
-                            }
-                        ],
-                        label: "number of failures",
-                        borderColor: 'rgb(191, 57, 23)',
-                        pointBackgroundColor: 'rgb(191, 57, 23)',
-                        backgroundColor: 'rgba(191, 57, 23, 0.3)'
-                    }]
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Number of devices down in the south over time'
+                                'Number of failure / percent of battery'
                     },
                     scales: {
                         yAxes: [{
