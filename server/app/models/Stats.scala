@@ -23,9 +23,40 @@ class TimeTableDef(tag: Tag) extends Table[TimeStats](tag, "globals") {
     (date, nbConnectedObject, nbPanne, nbPanneNorth, nbPanneSouth) <> (TimeStats.tupled, TimeStats.unapply)
 }
 
+case class Temperature(temperature: Int, nbPanne: Int)
+
+class TemperatureDef(tag: Tag) extends Table[Temperature](tag, "temperature") {
+  def temperature = column[Int]("temperature", O.PrimaryKey)
+  def nbPanne = column[Int]("nbPanne")
+
+  override def * =
+    (temperature, nbPanne) <> (Temperature.tupled, Temperature.unapply)
+}
+
+case class Battery(battery: Int, nbPanne: Int)
+
+class BatteryTableDef(tag: Tag) extends Table[Battery](tag, "battery") {
+  def battery = column[Int]("battery", O.PrimaryKey)
+  def nbPanne = column[Int]("nbPanne")
+
+  override def * =
+    (battery, nbPanne) <> (Battery.tupled, Battery.unapply)
+}
+
+
 class Stats @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(implicit executionContext: ExecutionContext) extends HasDatabaseConfigProvider[JdbcProfile] {
 
   val timeStats = TableQuery[TimeTableDef]
+  val temperature = TableQuery[TemperatureDef]
+  val battery = TableQuery[BatteryTableDef]
+
+  def listAllTemperature: Future[Seq[Temperature]] = {
+    dbConfig.db.run(temperature.result)
+  }
+
+  def listAllBattery: Future[Seq[Battery]] = {
+    dbConfig.db.run(battery.result)
+  }
 
   def listAllTimes: Future[Seq[TimeStats]] = {
     dbConfig.db.run(timeStats.result)
