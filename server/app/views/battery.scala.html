@@ -1,4 +1,4 @@
-@(times: Seq[models.TimeStats])(implicit request: RequestHeader)
+@(times: Seq[models.Battery])(implicit request: RequestHeader)
 @main() {
     <nav class="navbar navbar-dark bg-dark">
         <span class="navbar-brand mb-0 h1">Dashboard</span>
@@ -29,7 +29,7 @@
             var myLineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ["1 July", "2 July", "3 July", "4 July", "5 July", "6 July", "7 July"],
+                    labels: ["1 Jully", "2 Jully", "3 Jully", "4 Jully", "5 Jully", "6 Jully", "7 Jully"],
                     datasets: [{
                         data: [
                             @for(day <- times){
@@ -64,7 +64,7 @@
             var myLineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ["1 July", "2 July", "3 July", "4 July", "5 July", "6 July", "7 July"],
+                    labels: ["1 Jully", "2 Jully", "3 Jully", "4 Jully", "5 Jully", "6 Jully", "7 Jully"],
                     datasets: [{
                         data: [
                             @for(day <- times){
@@ -98,7 +98,7 @@
             var myLineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ["1 July", "2 July", "3 July", "4 July", "5 July", "6 July", "7 July"],
+                    labels: ["1 Jully", "2 Jully", "3 Jully", "4 Jully", "5 Jully", "6 Jully", "7 Jully"],
                     datasets: [{
                         data: [
                             @for(day <- times){

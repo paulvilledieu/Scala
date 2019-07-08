@@ -36,7 +36,4 @@ class StatsService @Inject()(stats: Stats) {
     stats.listAllBattery
   }
 
-  def getAll ={
-    (listAllTimes, listAllTemperature, listAllBattery)
-  }
 }

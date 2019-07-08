@@ -18,4 +18,17 @@ class ApplicationController @Inject()(cc: ControllerComponents, globalService: S
       Ok(views.html.index(globals))
     }
   }
+
+  def temperature() = Action.async { implicit request: Request[AnyContent] =>
+    globalService.listAllTemperature map { globals =>
+      Ok(views.html.temperature(globals))
+    }
+  }
+
+  def battery() = Action.async { implicit request: Request[AnyContent] =>
+    globalService.listAllBattery map { globals =>
+      Ok(views.html.battery(globals))
+    }
+  }
+
 }

@@ -36,7 +36,7 @@ class TemperatureDef(tag: Tag) extends Table[Temperature](tag, "temperature") {
 case class Battery(battery: Int, nbPanne: Int)
 
 class BatteryTableDef(tag: Tag) extends Table[Battery](tag, "battery") {
-  def battery = column[Int]("battery", O.PrimaryKey)
+  def battery = column[Int]("batteryRemaining", O.PrimaryKey)
   def nbPanne = column[Int]("nbPanne")
 
   override def * =
