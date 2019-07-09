@@ -24,6 +24,7 @@ object Analytics extends App {
             .withColumn("date", (col("timestamp").cast("timestamp").cast("date")))
             .groupBy("date")
             .count()
+            .orderBy(desc("date"))
             .withColumnRenamed("count","nbAlerts")
     } 
 
@@ -31,6 +32,7 @@ object Analytics extends App {
         df.withColumn("date", (col("timestamp").cast("timestamp").cast("date")))
             .groupBy("date")
             .agg(countDistinct("objectId"))
+            .orderBy(desc("date"))
             .withColumnRenamed("count(DISTINCT objectId)","nbConnectedObject")
 
     }
@@ -40,6 +42,7 @@ object Analytics extends App {
             .withColumn("date", (col("timestamp").cast("timestamp").cast("date")))
             .groupBy("date")
             .count()
+            .orderBy(desc("date"))
             .withColumnRenamed("count","nbPanne")
     }
 
@@ -48,6 +51,7 @@ object Analytics extends App {
             .withColumn("date", (col("timestamp").cast("timestamp").cast("date")))
             .groupBy("date")
             .count()
+            .orderBy(desc("date"))
             .withColumnRenamed("count","nbPanneNorth")
     }
 
@@ -56,6 +60,7 @@ object Analytics extends App {
             .withColumn("date", (col("timestamp").cast("timestamp").cast("date")))
             .groupBy("date")
             .count()
+            .orderBy(desc("date"))
             .withColumnRenamed("count","nbPanneSouth")
     }
 
@@ -63,6 +68,7 @@ object Analytics extends App {
         df.filter(col("state").isin("Failed"))
             .groupBy("batteryRemaining")
             .count()
+            .orderBy(asc("batteryRemaining"))
             .withColumnRenamed("count","nbPanne")
     }
 
@@ -71,6 +77,7 @@ object Analytics extends App {
             .withColumn("temperature", round(df.col("temperature")))
             .groupBy("temperature")
             .count()
+            .orderBy(asc("temperature"))
             .withColumnRenamed("count","nbPanne")
         
     }
