@@ -34,7 +34,7 @@
                     ],
                     datasets: [{
                         data: [
-                            @for(day <- times){
+                            @for(day <- times.sortBy(t => t.temperature)){
                             @day.nbPanne,
                             }
                         ],

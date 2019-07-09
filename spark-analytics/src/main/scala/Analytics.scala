@@ -98,7 +98,7 @@ object Analytics extends App {
     tmp3.show()
 
     val prop = new java.util.Properties
-    prop.setProperty("user", "root")
+    prop.setProperty("user", "root2")
     prop.setProperty("password", "root")
     prop.setProperty("driver", "com.mysql.jdbc.Driver")
     

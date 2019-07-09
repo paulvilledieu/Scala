@@ -32,7 +32,7 @@
                     labels: ["1 July", "2 July", "3 July", "4 July", "5 July", "6 July", "7 July"],
                     datasets: [{
                         data: [
-                            @for(day <- times){
+                            @for(day <- times.sortBy(t => t.date.toLocalDate.getDayOfMonth).reverse){
                             @day.nbPanne,
                             }
                         ],
@@ -67,7 +67,7 @@
                     labels: ["1 July", "2 July", "3 July", "4 July", "5 July", "6 July", "7 July"],
                     datasets: [{
                         data: [
-                            @for(day <- times){
+                            @for(day <- times.sortBy(t => t.date.toLocalDate.getDayOfMonth).reverse){
                             @day.nbPanneNorth,
                             }
                         ],
@@ -101,7 +101,7 @@
                     labels: ["1 July", "2 July", "3 July", "4 July", "5 July", "6 July", "7 July"],
                     datasets: [{
                         data: [
-                            @for(day <- times){
+                            @for(day <- times.sortBy(t => t.date.toLocalDate.getDayOfMonth).reverse){
                             @day.nbPanneSouth,
                             }
                         ],
